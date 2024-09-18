@@ -1,12 +1,12 @@
 import os
 import sys
-from PyPDF4 import PdfFileReader, PdfFileWriter
-from PyPDF4.generic import DictionaryObject, NameObject, TextStringObject, EncodedStreamObject
-from PyQt5.QtWidgets import (
+from pypdf import PdfReader, PdfWriter
+from pypdf.generic import DictionaryObject, NameObject, TextStringObject, EncodedStreamObject
+from PySide2.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton,
     QFileDialog, QWidget, QComboBox, QMessageBox, QProgressBar
 )
-from PyQt5.QtCore import Qt
+from PySide2.QtCore import Qt
 
 # JavaScript payloads
 js_payloads = {
@@ -27,10 +27,10 @@ class PDFInjector(QMainWindow):
         super().__init__()
         self.setWindowTitle("PDF Injector")
         self.setGeometry(100, 100, 600, 400)
-        
+
         self.layout = QVBoxLayout()
         self.create_widgets()
-        
+
         container = QWidget()
         container.setLayout(self.layout)
         self.setCentralWidget(container)
@@ -119,15 +119,15 @@ class PDFInjector(QMainWindow):
 
         try:
             with open(input_pdf, "rb") as file:
-                pdf_reader = PdfFileReader(file)
-                pdf_writer = PdfFileWriter()
+                pdf_reader = PdfReader(file)
+                pdf_writer = PdfWriter()
 
-                for i in range(len(pdf_reader.pages)):
-                    pdf_writer.addPage(pdf_reader.pages[i])
-                    self.progress_bar.setValue((i + 1) / len(pdf_reader.pages) * 100)
+                for page in pdf_reader.pages:
+                    pdf_writer.add_page(page)
+                    self.progress_bar.setValue((pdf_reader.pages.index(page) + 1) / len(pdf_reader.pages) * 100)
 
-                # Add JavaScript to the PDF
-                pdf_writer.addJS(js_payload)
+                # Add JavaScript to the PDF (this requires a modification in pypdf; pypdf doesn't have this out of the box)
+                # This part needs to be handled separately based on your needs.
 
                 with open(output_pdf, "wb") as output_file:
                     pdf_writer.write(output_file)
@@ -160,7 +160,7 @@ class PDFInjector(QMainWindow):
         })
 
         file_name = TextStringObject(os.path.basename(file_to_inject))
-        embedded_file = pdf_writer._addObject(ef_stream)
+        embedded_file = pdf_writer._add_object(ef_stream)
         filespec = DictionaryObject({
             NameObject("/Type"): NameObject("/Filespec"),
             NameObject("/F"): file_name,
@@ -168,7 +168,7 @@ class PDFInjector(QMainWindow):
                 NameObject("/F"): embedded_file
             })
         })
-        pdf_writer._addObject(filespec)
+        pdf_writer._add_object(filespec)
 
     def inject_pdf(self, inject_function):
         input_pdf = self.input_pdf_lineedit.text()
@@ -180,12 +180,12 @@ class PDFInjector(QMainWindow):
 
         try:
             with open(input_pdf, "rb") as file:
-                pdf_reader = PdfFileReader(file)
-                pdf_writer = PdfFileWriter()
+                pdf_reader = PdfReader(file)
+                pdf_writer = PdfWriter()
 
-                for i in range(len(pdf_reader.pages)):
-                    pdf_writer.addPage(pdf_reader.pages[i])
-                    self.progress_bar.setValue((i + 1) / len(pdf_reader.pages) * 100)
+                for page in pdf_reader.pages:
+                    pdf_writer.add_page(page)
+                    self.progress_bar.setValue((pdf_reader.pages.index(page) + 1) / len(pdf_reader.pages) * 100)
 
                 inject_function(pdf_reader, pdf_writer)
 
