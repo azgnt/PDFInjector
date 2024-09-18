@@ -34,8 +34,6 @@ pipx install PyMuPDF
 
 Run the application with the following command:
 
-bash
-cd 
 python injector.py
 
 🤝 Contributing
