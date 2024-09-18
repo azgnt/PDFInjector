@@ -44,7 +44,7 @@ The application comes with several predefined JavaScript payloads, including:
 
    Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/PDFInjector.git
+   git clone https://github.com/azgnt/PDFInjector.git
    cd PDFInjector
    ```
 
