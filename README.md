@@ -20,7 +20,7 @@ PDF Injector is a tool that allows you to inject malicious code into PDF files. 
 To install PDF Injector, follow these steps:
 
 1.  Clone the repository: `git clone https://github.com/kdairatchi/PDFInjector.git`
-2.  Install the dependencies: `pip install -r requirements.txt`
+2.  Install the dependencies: `pip install -r requirements.txt` or 'pip install PyPDF4 PyQt5'
 3.  Run the script: `python injector.py`
 
 **Usage**
