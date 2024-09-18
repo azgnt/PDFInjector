@@ -1,2 +1,2 @@
-PyPDF4==2.0.0
-PyQt5==5.15.6
+PyPDF4
+PyQt5
