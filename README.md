@@ -17,7 +17,7 @@ PDFInjector is a Python application that allows users to inject malicious URLs, 
 To get started, clone this repository and install the required packages:
 
 ```bash
-git clone https://github.com/yourusername/PDFInjector.git
+git clone https://github.com/kdairatchi/PDFInjector.git
 cd PDFInjector
 pip install -r requirements.txt or 
 
