@@ -1,10 +1,28 @@
-**PDF Injector**
-==========================
+# PDF Injector
 
-**Description**
---------------
+PDF Injector is a powerful Python application that allows users to inject malicious URLs, files, and JavaScript code into PDF documents. This tool is intended for educational purposes and should be used responsibly and ethically.
 
-PDF Injector is a tool that allows you to inject malicious code into PDF files. It uses the PyPDF4 library to read and write PDF files, and the PyQt5 library to create a user-friendly interface.
+## Features
+
+- **Inject Malicious URLs**: Embed a URL that will open automatically when the PDF is accessed.
+- **Inject Files**: Add an embedded file within the PDF, which can be extracted later.
+- **Inject JavaScript**: Insert JavaScript payloads to execute various actions when the PDF is opened.
+- **User-Friendly GUI**: Built using PyQt5, providing an intuitive interface for easy interaction.
+
+## JavaScript Payloads
+
+The application comes with several predefined JavaScript payloads, including:
+
+- Alert Box
+- Denial of Service (DoS)
+- Print Dialog
+- Open Website
+- Download File
+- Remote Code Execution (RCE)
+- Reverse Shell
+- Remote Access
+- Keylogger
+- Clipboard Data Exfiltration
 
 **Features**
 ------------
