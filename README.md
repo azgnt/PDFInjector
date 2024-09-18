@@ -1,6 +1,6 @@
 # 📄 PDFInjector
 
-![PDFInjector Banner](banner.py)
+![PDFInjector Banner](banner.png)
 
 ## 🚀 Overview
 
