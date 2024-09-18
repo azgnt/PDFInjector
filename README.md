@@ -39,6 +39,19 @@ This project is licensed under the Unlicense License. See the LICENSE file for d
 
 This tool is intended for educational and ethical hacking purposes only. The author does not condone illegal activities.
 
+# Errors
+sudo apt-get install libxcb-xinerama0
+sudo apt-get install libxcb-cursor0
+export QT_QPA_PLATFORM_PLUGIN_PATH=/home/kali/tools/myenv/lib/python3.12/site-packages/PySide6/Qt/plugins/platforms
+source ~/.bashrc  # or source ~/.zshrc
+pip uninstall PySide6
+pip install PySide6
+pip install PyMuPDF
+pip install shiboken6
+
+source ~/tools/myenv/bin/activate
+QT_DEBUG_PLUGINS=1 python injector.py
+
 
 old
 # PDF Injector
