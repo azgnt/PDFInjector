@@ -4,7 +4,7 @@
 **Banner**
 --------
 
-[![PDF Injector Banner](https://github.com/kdairatchi/PDF-Injector/blob/main/banner.png)](https://github.com/kdairatchi/PDF-Injector)
+[![PDF Injector Banner](https://github.com/kdairatchi/PDFInjector/banner.png)](https://github.com/kdairatchi/PDFInjector)
 
 **Description**
 --------------
@@ -19,14 +19,14 @@ PDF Injector is a tool that allows you to inject malicious code into PDF files. 
 *   Inject JavaScript code into PDF files
 *   Create a user-friendly interface using PyQt5
 
-**Installation**
+[**Installation**
 ---------------
 
 To install PDF Injector, follow these steps:
 
-1.  Clone the repository: `git clone https://github.com/kdairatchi/PDF-Injector.git`
+1.  Clone the repository: `git clone https://github.com/kdairatchi/PDFInjector.git`
 2.  Install the dependencies: `pip install -r requirements.txt`
-3.  Run the script: `python pdf_injector.py`
+3.  Run the script: `python injector.py`
 
 **Usage**
 -----
@@ -50,14 +50,9 @@ To use PDF Injector, follow these steps:
 
 Contributions are welcome! If you would like to contribute to PDF Injector, please fork the repository and submit a pull request.
 
-**License**
--------
-
-PDF Injector is licensed under the MIT License.
-
 
 **References**
 --------------
 
 *   [PyPDF4 Documentation](https://pypdf4.readthedocs.io/en/latest/)
-*   [PyQt5 Documentation](https://doc.qt.io/qtforpython/)
+*   [PyQt5 Documentation](https://doc.qt.io/qtforpython/)](https://github.com/azgnt/PDFInjector.git)
