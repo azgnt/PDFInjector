@@ -2,11 +2,11 @@ import os
 import sys
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import DictionaryObject, NameObject, TextStringObject, EncodedStreamObject
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton,
     QFileDialog, QWidget, QComboBox, QMessageBox, QProgressBar
 )
-from PySide2.QtCore import Qt
+from PySide6.QtCore import Qt
 
 # JavaScript payloads
 js_payloads = {
@@ -126,8 +126,9 @@ class PDFInjector(QMainWindow):
                     pdf_writer.add_page(page)
                     self.progress_bar.setValue((pdf_reader.pages.index(page) + 1) / len(pdf_reader.pages) * 100)
 
-                # Add JavaScript to the PDF (this requires a modification in pypdf; pypdf doesn't have this out of the box)
-                # This part needs to be handled separately based on your needs.
+                # Note: pypdf currently doesn't support adding JavaScript directly.
+                # You'll need to implement this functionality if required.
+                # This is a placeholder for where JavaScript would be injected.
 
                 with open(output_pdf, "wb") as output_file:
                     pdf_writer.write(output_file)
@@ -203,4 +204,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = PDFInjector()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec()) 
