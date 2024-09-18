@@ -48,7 +48,9 @@ class PDFInjector(QMainWindow):
         self.add_button("Browse", self.browse_output_pdf)
 
         self.add_label("Malicious URL:")
-        self.malicious_url_lineedit = self.add_line_edit()
+        self.malicious_url_combobox = QComboBox()
+        self.load_malicious_urls()
+        self.layout.addWidget(self.malicious_url_combobox)
 
         self.add_button("Inject URL", self.inject_url)
 
@@ -67,6 +69,14 @@ class PDFInjector(QMainWindow):
 
         self.progress_bar = QProgressBar(self)
         self.layout.addWidget(self.progress_bar)
+
+    def load_malicious_urls(self):
+        try:
+            with open('malicious_urls.txt', 'r') as file:
+                urls = file.read().splitlines()
+                self.malicious_url_combobox.addItems(urls)
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Error", "The file 'malicious_urls.txt' was not found.")
 
     def add_label(self, text):
         label = QLabel(text)
@@ -134,7 +144,7 @@ class PDFInjector(QMainWindow):
             self.show_error_message("An error occurred while injecting JavaScript.", e)
 
     def _inject_url(self, doc):
-        malicious_url = self.malicious_url_lineedit.text()
+        malicious_url = self.malicious_url_combobox.currentText()
         # Logic for injecting URL goes here
 
     def _inject_file(self, doc):
