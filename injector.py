@@ -145,11 +145,34 @@ class PDFInjector(QMainWindow):
 
     def _inject_url(self, doc):
         malicious_url = self.malicious_url_combobox.currentText()
-        # Logic for injecting URL goes here
+        if not malicious_url:
+            QMessageBox.warning(self, "Input Error", "Please select a valid URL.")
+            return
+
+        try:
+            first_page = doc[0]
+            link_rect = fitz.Rect(100, 100, 200, 120)
+            first_page.insert_link({
+                "kind": fitz.LINK_URI,
+                "from": link_rect,
+                "uri": malicious_url
+            })
+        except Exception as e:
+            self.show_error_message("An error occurred while injecting the URL.", e)
 
     def _inject_file(self, doc):
         file_to_inject = self.file_to_inject_lineedit.text()
-        # Logic for injecting file goes here
+        if not file_to_inject:
+            QMessageBox.warning(self, "Input Error", "Please select a file to inject.")
+            return
+
+        try:
+            with open(file_to_inject, 'rb') as f:
+                file_data = f.read()
+            # Example: Embedding file data as an annotation or attachment
+            doc.embeddedFileAdd(file_data, file_to_inject)
+        except Exception as e:
+            self.show_error_message("An error occurred while injecting the file.", e)
 
     def inject_pdf(self, inject_function):
         input_pdf = self.input_pdf_lineedit.text()
