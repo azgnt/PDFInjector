@@ -19,8 +19,17 @@ To get started, clone this repository and install the required packages:
 ```bash
 git clone https://github.com/azgnt/PDFInjector.git)
 cd PDFInjector
-pip install -r requirements.txt or 
-
+pip install -r requirements.txt or
+sudo apt install pipx or pip install pipx
+Use pipx when you want to install command-line applications that you can run directly from your terminal.
+Use pip when you want to install libraries or modules that are meant to be imported into your Python scripts.
+pipx install pyfiglet
+sudo apt install python3-termcolor
+or python3 -m venv myenv
+source myenv/bin/activate
+pip install termcolor
+pipx install PySide6
+pipx install PyMuPDF
 🖥 Usage
 
 Run the application with the following command:
