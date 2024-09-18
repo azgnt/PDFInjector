@@ -1,2 +1,2 @@
-PyPDF4
-PyQt5
+PySide6
+pypdf
