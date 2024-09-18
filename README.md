@@ -1,11 +1,6 @@
 **PDF Injector**
 ==========================
 
-**Banner**
---------
-
-[![PDF Injector Banner](https://github.com/kdairatchi/PDFInjector/banner.png)](https://github.com/kdairatchi/PDFInjector)
-
 **Description**
 --------------
 
