@@ -1,3 +1,46 @@
+# 📄 PDFInjector
+
+![PDFInjector Banner](banner.png)
+
+## 🚀 Overview
+
+PDFInjector is a Python application that allows users to inject malicious URLs, files, or JavaScript payloads into PDF documents. This tool is intended for educational purposes only and should not be used for illegal activities.
+
+## ✨ Features
+
+- Inject malicious URLs into PDFs 🌐
+- Embed files within PDFs 📎
+- Add JavaScript payloads to PDF documents 💻
+
+## 🛠 Installation
+
+To get started, clone this repository and install the required packages:
+
+```bash
+git clone https://github.com/yourusername/PDFInjector.git
+cd PDFInjector
+pip install -r requirements.txt or 
+
+🖥 Usage
+
+Run the application with the following command:
+
+bash
+cd 
+python injector.py
+
+🤝 Contributing
+
+Contributions are welcome! Please create a new issue or submit a pull request.
+📝 License
+
+This project is licensed under the Unlicense License. See the LICENSE file for details.
+⚠️ Disclaimer
+
+This tool is intended for educational and ethical hacking purposes only. The author does not condone illegal activities.
+
+
+old
 # PDF Injector
 
 PDF Injector is a powerful Python application that allows users to inject malicious URLs, files, and JavaScript code into PDF documents. This tool is intended for educational purposes and should be used responsibly and ethically.
