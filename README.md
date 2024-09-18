@@ -57,7 +57,7 @@ The application comes with several predefined JavaScript payloads, including:
 
    Run the application:
    ```bash
-   python pdf_injector.py
+   python pdfinjector.py
    ```
 
    Select the input PDF, specify the output PDF, and choose your action (inject URL, file, or JavaScript payload). 
