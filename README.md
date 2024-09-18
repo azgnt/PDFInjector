@@ -24,48 +24,48 @@ The application comes with several predefined JavaScript payloads, including:
 - Keylogger
 - Clipboard Data Exfiltration
 
-**Features**
-------------
+   ```markdown
+   # 📄 PDF Injector
 
-*   Inject malicious URLs into PDF files
-*   Inject malicious files into PDF files
-*   Inject JavaScript code into PDF files
-*   Create a user-friendly interface using PyQt5
+   A Python application to inject URLs, files, and JavaScript into PDF documents using PyPDF4 and PyQt5. 
 
-[**Installation**
----------------
+   ## 🚀 Features
+   - Inject URLs into PDFs 🌐
+   - Embed files within PDFs 📁
+   - Inject JavaScript payloads 💻
+   - User-friendly GUI interface 🖥️
 
-To install PDF Injector, follow these steps:
+   ## ⚙️ Requirements
+   - Python 3.x
+   - PyPDF4
+   - PyQt5
 
-1.  Clone the repository: `git clone https://github.com/kdairatchi/PDFInjector.git`
-2.  Install the dependencies: `pip install -r requirements.txt` or 'pip install PyPDF4 PyQt5'
-3.  Run the script: `python injector.py`
+   ## 📦 Installation
 
-**Usage**
------
+   Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/PDFInjector.git
+   cd PDFInjector
+   ```
 
-To use PDF Injector, follow these steps:
+   Install the required packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-1.  Select the input PDF file
-2.  Select the output PDF file
-3.  Choose the injection method (URL, file, or JavaScript)
-4.  Enter the malicious code or file path
-5.  Click the "Inject" button
+   ## 🎉 Usage
 
-**Troubleshooting**
-----------------
+   Run the application:
+   ```bash
+   python pdf_injector.py
+   ```
 
-*   If you encounter any errors, check the console output for more information.
-*   If you are unable to inject code into a PDF file, try using a different injection method.
+   Select the input PDF, specify the output PDF, and choose your action (inject URL, file, or JavaScript payload). 
+   ```
+    📝 License
+    See the [LICENSE](LICENSE) file for 
+   Copyright (c) 2024 Kdairatchi
 
-**Contributing**
-------------
-
-Contributions are welcome! If you would like to contribute to PDF Injector, please fork the repository and submit a pull request.
-
-
-**References**
---------------
-
-*   [PyPDF4 Documentation](https://pypdf4.readthedocs.io/en/latest/)
-*   [PyQt5 Documentation](https://doc.qt.io/qtforpython/)](https://github.com/azgnt/PDFInjector.git)
+   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+   ...
+   ```
